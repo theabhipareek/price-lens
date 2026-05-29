@@ -5,393 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PriceLens — Device Price Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --r-xs:6px;--r-sm:10px;--r-md:14px;--r-lg:20px;--r-xl:28px;
-  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);--t:.2s;
-}
-:root[data-theme="light"]{
-  --bg:#faf7f4;--bg2:#f2ede7;--surface:#fff;--surf2:#fdf9f6;--surf3:#f5f0ea;
-  --border:#e8e0d6;--border2:#d4c9bc;
-  --ink:#1a1511;--ink2:#6b5f54;--ink3:#a89e94;--ink4:#c8bfb5;
-  --amber:#c2601a;--amber-bg:#fef5ed;--amber-bdr:#f0cba0;--amber-glow:rgba(194,96,26,.12);
-  --emerald:#1a7a4e;--emerald-bg:#edf7f2;--emerald-bdr:#9ed4b8;
-  --sky:#1a5a8a;--sky-bg:#eaf3fb;--sky-bdr:#9ec8e8;
-  --ruby:#b83030;--ruby-bg:#fdf0f0;
-  --teal:#1a6b5a;--teal-bg:#ecf6f3;--teal-bdr:#9ed4c8;
-  --violet:#5a3a8a;--violet-bg:#f3effd;--violet-bdr:#c8b8e8;
-  --sh-xs:0 1px 3px rgba(80,50,20,.06),0 1px 8px rgba(80,50,20,.04);
-  --sh-sm:0 2px 8px rgba(80,50,20,.07),0 1px 3px rgba(80,50,20,.04);
-  --sh-md:0 6px 24px rgba(80,50,20,.10),0 2px 6px rgba(80,50,20,.05);
-  --sh-lg:0 16px 60px rgba(80,50,20,.14),0 4px 12px rgba(80,50,20,.06);
-  --overlay:rgba(20,12,5,.5);--win-row:rgba(26,122,78,.05);--gst-row:rgba(26,90,138,.05);
-  --header-bg:rgba(255,255,255,.88);
-}
-:root[data-theme="dark"]{
-  --bg:#100e0b;--bg2:#0b0a08;--surface:#1c1914;--surf2:#231f19;--surf3:#2a261f;
-  --border:#322d25;--border2:#423d33;
-  --ink:#f0ead0;--ink2:#8a8070;--ink3:#504840;--ink4:#38342c;
-  --amber:#e08040;--amber-bg:#291a0c;--amber-bdr:#5a3018;--amber-glow:rgba(224,128,64,.10);
-  --emerald:#3ab870;--emerald-bg:#0e2218;--emerald-bdr:#2a5a40;
-  --sky:#4a9fd4;--sky-bg:#0e1e2e;--sky-bdr:#2a4a6a;
-  --ruby:#e04848;--ruby-bg:#2a1010;
-  --teal:#3ab89a;--teal-bg:#0f2320;--teal-bdr:#2a5a50;
-  --violet:#9a7ad4;--violet-bg:#1e1530;--violet-bdr:#4a3570;
-  --sh-xs:0 1px 3px rgba(0,0,0,.25);--sh-sm:0 2px 8px rgba(0,0,0,.35);
-  --sh-md:0 6px 24px rgba(0,0,0,.45);--sh-lg:0 16px 60px rgba(0,0,0,.6);
-  --overlay:rgba(0,0,0,.75);--win-row:rgba(58,184,112,.05);--gst-row:rgba(74,159,212,.05);
-  --header-bg:rgba(28,25,20,.88);
-}
-
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
-body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;transition:background var(--t) var(--ease),color var(--t) var(--ease);font-size:14.5px;line-height:1.6;}
-::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
-
-/* HEADER */
-header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--header-bg);backdrop-filter:saturate(1.8) blur(20px);-webkit-backdrop-filter:saturate(1.8) blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;gap:16px;transition:background var(--t),border-color var(--t);}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-.logo-mark{width:32px;height:32px;background:var(--amber);border-radius:9px;display:grid;place-items:center;flex-shrink:0;box-shadow:0 2px 8px var(--amber-glow);transition:transform .15s var(--spring),box-shadow .15s var(--ease);}
-.logo-mark:hover{transform:translateY(-1px) scale(1.04);box-shadow:0 4px 16px var(--amber-glow);}
-.logo-mark svg{width:16px;height:16px;fill:#fff;}
-.logo-wordmark{font-family:'DM Serif Display',Georgia,serif;font-size:1.2rem;color:var(--ink);letter-spacing:-.01em;}
-.logo-wordmark em{font-style:italic;color:var(--amber);}
-.pill-nav{display:flex;gap:1px;background:var(--surf3);border:1px solid var(--border);border-radius:10px;padding:3px;}
-.pill-nav button{background:transparent;border:none;color:var(--ink2);padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;transition:all var(--t) var(--ease);white-space:nowrap;letter-spacing:.005em;}
-.pill-nav button.active{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:var(--sh-xs);}
-.pill-nav button:not(.active):hover{color:var(--ink);background:var(--bg2);}
-.nav-count{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;font-size:.6rem;font-weight:700;background:var(--amber);color:#fff;border-radius:99px;margin-left:5px;vertical-align:middle;opacity:0;transform:scale(0);transition:all .18s var(--spring);}
-.nav-count.show{opacity:1;transform:scale(1);}
-.hdr-actions{display:flex;align-items:center;gap:8px;}
-.btn-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--border);background:var(--surf2);color:var(--ink2);cursor:pointer;font-size:15px;transition:all var(--t) var(--ease);}
-.btn-icon:hover{border-color:var(--border2);color:var(--ink);background:var(--surf3);}
-.btn-cta{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:var(--amber);color:#fff;border:none;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;transition:all var(--t) var(--ease);white-space:nowrap;box-shadow:0 2px 8px var(--amber-glow);}
-.btn-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--amber-glow);filter:brightness(1.06);}
-.btn-cta:active{transform:translateY(0);}
-.btn-cta svg{flex-shrink:0;}
-
-/* LAYOUT */
-main{max-width:1360px;margin:0 auto;padding:32px 28px;}
-.tab-pane{display:none;}
-.tab-pane.active{display:block;animation:fadeUp .25s var(--ease) both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-.page-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;gap:16px;flex-wrap:wrap;}
-.page-heading{font-family:'DM Serif Display',Georgia,serif;font-size:1.7rem;color:var(--ink);letter-spacing:-.02em;line-height:1.2;}
-.page-sub{font-size:.8rem;color:var(--ink3);margin-top:3px;font-weight:400;}
-.page-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-
-/* STAT CARDS */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--sh-sm);transition:border-color var(--t),box-shadow var(--t);position:relative;overflow:hidden;}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber);opacity:0;transition:opacity var(--t);}
-.stat-card:hover::before{opacity:1;}
-.stat-card:hover{box-shadow:var(--sh-md);border-color:var(--border2);}
-.stat-label{font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--ink3);margin-bottom:10px;}
-.stat-num{font-family:'DM Mono',monospace;font-size:1.7rem;font-weight:500;color:var(--amber);line-height:1;letter-spacing:-.02em;}
-.stat-sub{font-size:.72rem;color:var(--ink2);margin-top:8px;line-height:1.5;}
-.stat-sub strong{color:var(--ink);font-weight:600;}
-
-/* SECTION LABEL */
-.sec-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--ink3);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
-
-/* PRODUCT BLOCK */
-.prod-block{margin-bottom:40px;}
-.prod-block-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;cursor:pointer;user-select:none;}
-.prod-block-name{font-family:'DM Serif Display',Georgia,serif;font-size:1.08rem;color:var(--ink);flex:1;min-width:0;letter-spacing:-.01em;}
-.cat-chip{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-bdr);padding:3px 9px;border-radius:99px;white-space:nowrap;}
-.entry-count{font-size:.72rem;color:var(--ink3);white-space:nowrap;}
-.collapse-toggle{font-size:.72rem;color:var(--ink3);transition:transform var(--t);display:inline-block;}
-.prod-block.collapsed .collapse-toggle{transform:rotate(-90deg);}
-.prod-block.collapsed .prod-block-body{display:none;}
-
-/* INSIGHT CARDS */
-.insight-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:10px;margin-bottom:14px;}
-.ic{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px 13px;box-shadow:var(--sh-xs);transition:transform .15s var(--ease),box-shadow .15s var(--ease);}
-.ic:hover{transform:translateY(-1px);box-shadow:var(--sh-sm);}
-.ic.ic-best{border-color:var(--emerald-bdr);background:var(--emerald-bg);}
-.ic.ic-gst{border-color:var(--sky-bdr);background:var(--sky-bg);}
-.ic.ic-teal{border-color:var(--teal-bdr);background:var(--teal-bg);}
-.ic-eye{font-size:.59rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
-.ic-best .ic-eye{color:var(--emerald);}.ic-gst .ic-eye{color:var(--sky);}.ic-teal .ic-eye{color:var(--teal);}.ic .ic-eye{color:var(--ink3);}
-.ic-store{font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ic-price{font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;letter-spacing:-.02em;}
-.ic-best .ic-price{color:var(--emerald);}.ic-gst .ic-price{color:var(--sky);}.ic-teal .ic-price{color:var(--teal);}.ic .ic-price{color:var(--ink);}
-.ic-note{font-size:.64rem;color:var(--ink3);margin-top:4px;line-height:1.4;}
-
-/* TABLE */
-.tbl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-sm);margin-bottom:10px;}
-.tbl-wrap{overflow-x:auto;}
-.ctbl{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:.76rem;}
-.ctbl th{text-align:left;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surf2);}
-.ctbl td{padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.ctbl tr:last-child td{border-bottom:none;}
-.ctbl tbody tr{transition:background .12s var(--ease);}
-.ctbl tbody tr:hover td{background:var(--surf2);}
-.ctbl tbody tr.row-winner td{background:var(--win-row);}
-.ctbl tbody tr.row-winner td:first-child{border-left:3px solid var(--emerald);}
-.ctbl tbody tr.row-gst td{background:var(--gst-row);}
-.badge-win{display:inline-flex;align-items:center;gap:3px;font-size:.6rem;font-weight:700;font-family:'DM Sans',sans-serif;background:var(--emerald);color:#fff;padding:2px 7px;border-radius:99px;letter-spacing:.03em;}
-.badge-gst{display:inline-flex;align-items:center;font-size:.6rem;font-weight:700;font-family:'DM Sans',sans-serif;background:var(--sky);color:#fff;padding:2px 7px;border-radius:99px;letter-spacing:.03em;}
-
-/* STORE PERF */
-.store-perf-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-sm);margin-bottom:28px;}
-.store-perf-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surf2);}
-.store-perf-title{font-size:.88rem;font-weight:600;color:var(--ink);}
-
-/* LIST ITEMS */
-.list-item{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:8px;transition:border-color var(--t),box-shadow var(--t),transform .12s var(--ease);box-shadow:var(--sh-xs);gap:12px;}
-.list-item:hover{border-color:var(--border2);box-shadow:var(--sh-sm);transform:translateY(-1px);}
-.list-item-name{font-size:.9rem;font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.4;}
-.tags{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
-.tag{font-size:.65rem;font-weight:500;color:var(--ink2);background:var(--surf3);border:1px solid var(--border);border-radius:5px;padding:2px 8px;letter-spacing:.01em;}
-.tag-amber{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-bdr);}
-.tag-emerald{color:var(--emerald);background:var(--emerald-bg);border-color:var(--emerald-bdr);}
-.tag-sky{color:var(--sky);background:var(--sky-bg);border-color:var(--sky-bdr);}
-.tag-teal{color:var(--teal);background:var(--teal-bg);border-color:var(--teal-bdr);}
-.tag-violet{color:var(--violet);background:var(--violet-bg);border-color:var(--violet-bdr);}
-.tag-dim{color:var(--ink3);font-size:.66rem;}
-
-/* ENTRY CARDS */
-.ecard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;margin-bottom:12px;box-shadow:var(--sh-xs);transition:border-color var(--t),box-shadow var(--t),transform .12s var(--ease);}
-.ecard:hover{border-color:var(--border2);box-shadow:var(--sh-md);transform:translateY(-1px);}
-.ecard-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px;}
-.ecard-name{font-size:.93rem;font-weight:600;color:var(--ink);margin-bottom:7px;line-height:1.4;}
-.ecard-tags{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
-.price-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px;}
-.pr-lbl{font-size:.61rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);margin-bottom:3px;}
-.pr-val{font-family:'DM Mono',monospace;font-size:.88rem;color:var(--ink);}
-.pr-sub{font-size:.63rem;color:var(--ink3);margin-top:2px;line-height:1.4;}
-/* entry note display */
-.entry-note-display{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:.78rem;color:var(--ink2);line-height:1.6;font-style:italic;}
-.entry-note-display::before{content:'📝 ';font-style:normal;font-size:.72rem;}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 15px;border-radius:9px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.8rem;transition:all var(--t) var(--ease);white-space:nowrap;letter-spacing:.01em;}
-.btn-primary{background:var(--amber);color:#fff;box-shadow:0 2px 6px var(--amber-glow);}
-.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 4px 14px var(--amber-glow);}
-.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border);}
-.btn-ghost:hover{color:var(--ink);border-color:var(--border2);background:var(--surf3);}
-.btn-danger{background:transparent;color:var(--ruby);border:1px solid transparent;padding:6px 10px;font-size:.75rem;}
-.btn-danger:hover{border-color:var(--ruby);background:var(--ruby-bg);}
-.btn-sm{padding:6px 11px;font-size:.74rem;border-radius:7px;}
-
-/* FORMS */
-.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;}
-.fg:last-child{margin-bottom:0;}
-.lbl{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--ink2);}
-.lbl-note{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3);font-size:.68rem;}
-input[type=text],input[type=number],textarea,select{background:var(--surf2);border:1px solid var(--border);border-radius:9px;color:var(--ink);padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:.875rem;transition:border-color var(--t),background var(--t),box-shadow var(--t);outline:none;width:100%;-webkit-appearance:none;appearance:none;}
-input[type=text],input[type=number],select{height:40px;}
-textarea{height:72px;resize:vertical;line-height:1.5;}
-input:focus,textarea:focus,select:focus{border-color:var(--amber);background:var(--surface);box-shadow:0 0 0 3px var(--amber-glow);}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a89e94'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;}
-select option{background:var(--surface);color:var(--ink);}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.check-row{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;}
-.check-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--amber);cursor:pointer;flex-shrink:0;}
-.check-row label{font-size:.875rem;font-weight:500;color:var(--ink);cursor:pointer;line-height:1.4;}
-.seg-ctrl{display:flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;height:40px;}
-.seg-ctrl button{flex:1;background:transparent;border:none;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.78rem;transition:all var(--t) var(--ease);}
-.seg-ctrl button.on{background:var(--amber);color:#fff;font-weight:600;}
-.seg-ctrl button:not(.on):hover{background:var(--surf3);color:var(--ink);}
-.seg-sm{height:34px;}
-
-/* MODAL */
-.overlay{position:fixed;inset:0;background:var(--overlay);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:20px;animation:overlayFade .18s ease both;}
-@keyframes overlayFade{from{opacity:0;}to{opacity:1;}}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;width:100%;max-width:480px;position:relative;box-shadow:var(--sh-lg);max-height:92vh;overflow-y:auto;animation:modalSlide .22s var(--spring) both;}
-.modal.wide{max-width:580px;}
-@keyframes modalSlide{from{opacity:0;transform:scale(.94) translateY(12px);}to{opacity:1;transform:none;}}
-.modal-title{font-family:'DM Serif Display',Georgia,serif;font-size:1.3rem;color:var(--ink);margin-bottom:22px;letter-spacing:-.01em;padding-right:28px;line-height:1.3;}
-.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);}
-.btn-modal-close{position:absolute;top:18px;right:18px;width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--surf2);color:var(--ink2);cursor:pointer;font-size:.85rem;display:grid;place-items:center;transition:all var(--t) var(--ease);line-height:1;}
-.btn-modal-close:hover{color:var(--ink);border-color:var(--border2);}
-.inner-box{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r-md);padding:15px;margin-bottom:12px;}
-.inner-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink3);margin-bottom:12px;}
-.inner-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.badge-count{font-size:.62rem;font-weight:700;background:var(--amber);color:#fff;padding:1px 6px;border-radius:99px;margin-left:5px;}
-
-/* DISCOUNT STACK */
-.disc-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;transition:border-color var(--t);}
-.disc-item:hover{border-color:var(--border2);}
-.disc-item-main{display:grid;grid-template-columns:20px 1fr auto 80px 24px;gap:8px;align-items:center;padding:8px 11px;}
-.disc-item-note{padding:0 11px 8px 39px;font-size:.72rem;color:var(--ink2);font-style:italic;line-height:1.4;}
-.disc-item-note::before{content:'↳ ';}
-.disc-reorder{display:flex;flex-direction:column;gap:1px;}
-.btn-reorder{width:18px;height:14px;border-radius:3px;background:none;border:none;color:var(--ink3);cursor:pointer;font-size:.55rem;display:grid;place-items:center;transition:all var(--t);}
-.btn-reorder:hover{color:var(--ink);background:var(--surf3);}
-.btn-reorder:disabled{opacity:.25;cursor:default;}
-.disc-name{font-size:.82rem;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.disc-step{font-size:.62rem;color:var(--ink3);white-space:nowrap;font-weight:500;}
-.disc-val{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--ruby);font-weight:500;text-align:right;}
-.btn-disc-rm{width:22px;height:22px;border-radius:5px;background:none;border:none;color:var(--ink3);cursor:pointer;font-size:.75rem;display:grid;place-items:center;transition:all var(--t) var(--ease);}
-.btn-disc-rm:hover{color:var(--ruby);background:var(--ruby-bg);}
-
-/* ADD DISC ROW */
-.add-disc-form{background:var(--surface);border:1px dashed var(--border2);border-radius:9px;padding:12px;margin-top:8px;}
-.add-disc-row{display:grid;grid-template-columns:1fr auto 88px;gap:8px;align-items:flex-end;margin-bottom:8px;}
-.add-disc-note{display:flex;gap:8px;align-items:flex-end;}
-.add-disc-note input{flex:1;}
-
-/* PREVIEW */
-.preview-box{background:var(--surf2);border:1px solid var(--amber-bdr);border-radius:var(--r-md);padding:15px;margin-bottom:12px;animation:fadeUp .18s var(--ease) both;}
-.preview-eye{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);margin-bottom:11px;}
-.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.pv-l{font-size:.63rem;color:var(--ink3);margin-bottom:2px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
-.pv-v{font-family:'DM Mono',monospace;font-size:.86rem;color:var(--ink);}
-.pv-rule{grid-column:1/-1;height:1px;background:var(--border);margin:3px 0;}
-.gst-hint{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--sky);line-height:1.7;margin-top:7px;}
-
-/* SAVINGS BREAKDOWN */
-.savings-breakdown{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.sav-pill{font-size:.67rem;font-weight:600;padding:3px 9px;border-radius:99px;font-family:'DM Sans',sans-serif;}
-.sav-disc{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);}
-.sav-gst{background:var(--sky-bg);color:var(--sky);border:1px solid var(--sky-bdr);}
-.sav-total{background:var(--emerald-bg);color:var(--emerald);border:1px solid var(--emerald-bdr);}
-
-/* EMPTY */
-.empty{text-align:center;padding:64px 24px;}
-.empty-icon{font-size:2.6rem;margin-bottom:14px;opacity:.75;}
-.empty-title{font-family:'DM Serif Display',Georgia,serif;font-size:1.15rem;color:var(--ink);margin-bottom:6px;letter-spacing:-.01em;}
-.empty-body{font-size:.82rem;color:var(--ink2);max-width:340px;margin:0 auto;line-height:1.7;}
-.empty-actions{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
-.divider{height:1px;background:var(--border);margin:28px 0;}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--emerald);color:var(--ink);border-radius:12px;padding:11px 18px;font-size:.82rem;font-weight:500;box-shadow:var(--sh-lg);z-index:500;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.175,.885,.32,1.275);max-width:300px;line-height:1.4;display:flex;align-items:center;gap:8px;}
-.toast::before{content:'✓';font-size:.8rem;font-weight:700;color:var(--emerald);flex-shrink:0;}
-.toast.err{border-left-color:var(--ruby);}.toast.err::before{content:'!';color:var(--ruby);}
-.toast.warn{border-left-color:var(--amber);}.toast.warn::before{content:'↑';color:var(--amber);}
-.toast.show{transform:translateY(0);opacity:1;}
-@media(max-width:640px){
-  .toast{bottom:72px;right:14px;left:14px;max-width:100%;font-size:.8rem;}
-}
-
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.kbd-hint{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
-.kbd-item{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--ink3);}
-kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(--ink2);background:var(--surf3);border:1px solid var(--border);border-bottom:2px solid var(--border2);border-radius:4px;padding:1px 5px;line-height:1.6;}
-.footer-right{font-size:.68rem;color:var(--ink4);}
-
-/* UTILITY */
-.c-emerald{color:var(--emerald);}.c-ruby{color:var(--ruby);}.c-sky{color:var(--sky);}.c-amber{color:var(--amber);}.c-dim{color:var(--ink3);}
-
-/* SETTINGS PANEL */
-.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;box-shadow:var(--sh-sm);}
-.settings-section{margin-bottom:24px;}
-.settings-section:last-child{margin-bottom:0;}
-.settings-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.settings-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:16px;}
-.settings-row:last-child{border-bottom:none;}
-.settings-row-label{font-size:.875rem;font-weight:500;color:var(--ink);}
-.settings-row-sub{font-size:.72rem;color:var(--ink3);margin-top:2px;}
-.danger-zone{border:1px solid var(--ruby);border-radius:var(--r-md);padding:16px;}
-.danger-zone .settings-title{color:var(--ruby);border-color:var(--ruby-bg);}
-
-/* SORT SELECT */
-.sort-select{height:34px;width:auto;min-width:150px;font-size:.78rem;border-radius:8px;padding:0 28px 0 10px;}
-
-/* MOBILE FAB */
-.fab{display:none;position:fixed;bottom:76px;right:18px;z-index:90;width:52px;height:52px;border-radius:50%;background:var(--amber);color:#fff;border:none;cursor:pointer;font-size:1.4rem;box-shadow:0 4px 20px var(--amber-glow),0 2px 8px rgba(0,0,0,.18);transition:all .18s var(--spring);align-items:center;justify-content:center;}
-.fab:active{transform:scale(.93);}
-
-/* BOTTOM NAV (mobile) */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--header-bg);backdrop-filter:saturate(1.8) blur(20px);-webkit-backdrop-filter:saturate(1.8) blur(20px);border-top:1px solid var(--border);padding:0 4px env(safe-area-inset-bottom,0);height:58px;}
-.bnav-inner{display:flex;height:58px;}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:500;letter-spacing:.01em;padding:4px 2px;transition:color .15s var(--ease);position:relative;}
-.bnav-btn.active{color:var(--amber);}
-.bnav-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s var(--spring);}
-.bnav-btn.active svg{transform:translateY(-1px);}
-.bnav-dot{position:absolute;top:6px;right:calc(50% - 14px);width:6px;height:6px;border-radius:50%;background:var(--amber);border:2px solid var(--bg);opacity:0;transform:scale(0);transition:all .18s var(--spring);}
-.bnav-dot.show{opacity:1;transform:scale(1);}
-
-/* RESPONSIVE */
-@media(max-width:960px){.stats-grid{grid-template-columns:1fr 1fr;}}
-
-@media(max-width:640px){
-  /* Show bottom nav + FAB, hide header nav + CTA */
-  .bottom-nav{display:block;}
-  .fab{display:flex;}
-  .pill-nav,.btn-cta,.hdr-actions .btn-icon:not(#theme-btn){display:none;}
-
-  header{padding:0 14px;height:52px;}
-  .logo-wordmark{font-size:1.1rem;}
-
-  main{padding:16px 14px 80px;}
-  .page-hdr{margin-bottom:20px;}
-  .page-heading{font-size:1.3rem;}
-  .page-sub{font-size:.75rem;}
-  .page-controls{gap:6px;}
-  .page-controls .sort-select{min-width:120px;font-size:.74rem;}
-
-  /* Stats: 2 col */
-  .stats-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;}
-  .stat-card{padding:14px 14px;}
-  .stat-num{font-size:1.4rem;}
-  .stat-sub{font-size:.68rem;}
-
-  /* Insight row: scrollable on mobile */
-  .insight-row{display:flex;overflow-x:auto;gap:10px;padding-bottom:4px;scrollbar-width:none;margin-bottom:12px;flex-wrap:nowrap;}
-  .insight-row::-webkit-scrollbar{display:none;}
-  .ic{flex:0 0 140px;min-width:140px;}
-
-  /* Tables: replaced by mobile card view */
-  .tbl-card{overflow:hidden;}
-  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .ctbl th,.ctbl td{padding:10px 12px;font-size:.71rem;}
-  .ctbl{min-width:640px;}
-
-  /* Modal */
-  .modal,.modal.wide{padding:18px 16px;max-width:100%;border-radius:var(--r-xl) var(--r-xl) 0 0;margin-bottom:0;max-height:96vh;}
-  .overlay{align-items:flex-end;padding:0;}
-  .modal-title{font-size:1.15rem;margin-bottom:18px;}
-
-  /* Two-col grid goes single */
-  .g2{grid-template-columns:1fr;}
-  .add-disc-row{grid-template-columns:1fr 1fr;gap:8px;}
-
-  /* Entry cards */
-  .ecard{padding:16px 14px;}
-  .ecard-hdr{flex-direction:column;gap:10px;}
-  .ecard-hdr > div:last-child{display:flex;gap:6px;}
-  .price-row{grid-template-columns:1fr 1fr;gap:10px;}
-
-  /* List items */
-  .list-item{flex-direction:column;align-items:flex-start;gap:10px;}
-  .list-item > div:last-child{display:flex;gap:6px;width:100%;}
-  .list-item > div:last-child .btn{flex:1;justify-content:center;}
-
-  /* Product block */
-  .prod-block-hdr{gap:8px;}
-
-  /* Footer: hide keyboard hints on mobile */
-  footer .kbd-hint{display:none;}
-  footer{padding:10px 14px;}
-
-  /* Settings */
-  .settings-row{flex-direction:column;align-items:flex-start;gap:10px;}
-  .settings-row .seg-ctrl{width:100%;}
-  .settings-row .btn{width:100%;justify-content:center;}
-
-  /* Store perf summary – make table scroll */
-  .store-perf-card .tbl-wrap table{min-width:560px;}
-
-  /* Search input */
-  #entry-search{font-size:.875rem;width:100% !important;}
-  .page-controls{width:100%;flex-direction:column;align-items:stretch;}
-  .page-controls .sort-select{width:100%;min-width:unset;}
-  .page-controls .btn{width:100%;justify-content:center;}
-  .btn-desktop-only{display:none !important;}
-}
-
-@media(max-width:380px){
-  .stats-grid{grid-template-columns:1fr 1fr;gap:8px;}
-  .stat-num{font-size:1.25rem;}
-  .ic{flex:0 0 128px;min-width:128px;}
-}
-</style>
+<link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
 
@@ -420,7 +34,6 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
   </div>
 </header>
 
-<!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav">
   <div class="bnav-inner">
     <button class="bnav-btn active" id="bnav-dashboard" onclick="go('dashboard')">
@@ -449,11 +62,10 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
   </div>
 </nav>
 
-<!-- FAB (mobile) -->
 <button class="fab" onclick="openModal('entry')" title="Add price entry" aria-label="Add price entry">＋</button>
 
 <main>
-  <!-- DASHBOARD -->
+  
   <div class="tab-pane active" id="tab-dashboard">
     <div class="page-hdr">
       <div><div class="page-heading">Deal Dashboard</div><div class="page-sub">Live price intelligence across stores &amp; products</div></div>
@@ -461,7 +73,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
     <div id="dashboard-content"></div>
   </div>
 
-  <!-- PRODUCTS -->
+  
   <div class="tab-pane" id="tab-products">
     <div class="page-hdr">
       <div><div class="page-heading">Products</div><div class="page-sub" id="pc">0 tracked</div></div>
@@ -473,7 +85,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
     <div id="products-list"></div>
   </div>
 
-  <!-- STORES -->
+  
   <div class="tab-pane" id="tab-stores">
     <div class="page-hdr">
       <div><div class="page-heading">Stores</div><div class="page-sub" id="sc">0 tracked</div></div>
@@ -485,7 +97,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
     <div id="stores-list"></div>
   </div>
 
-  <!-- ENTRIES -->
+  
   <div class="tab-pane" id="tab-entries">
     <div class="page-hdr">
       <div><div class="page-heading">Price Entries</div><div class="page-sub" id="ec">0 entries</div></div>
@@ -507,7 +119,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
     <div id="entries-list"></div>
   </div>
 
-  <!-- SETTINGS -->
+  
   <div class="tab-pane" id="tab-settings">
     <div class="page-hdr"><div><div class="page-heading">Settings</div><div class="page-sub">Preferences &amp; data management</div></div></div>
     <div class="settings-panel">
@@ -556,7 +168,6 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
   <div class="footer-right">PriceLens — all data stored locally in your browser</div>
 </footer>
 
-<!-- CONFIRM DIALOG -->
 <div class="overlay" id="confirm-overlay" style="display:none">
   <div class="modal" style="max-width:360px">
     <div class="modal-title" id="confirm-title" style="margin-bottom:10px;font-size:1.1rem"></div>
@@ -568,10 +179,9 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
   </div>
 </div>
 
-<!-- MODALS -->
 <div class="overlay" id="overlay" style="display:none" onclick="overlayClick(event)">
 
-  <!-- PRODUCT -->
+  
   <div class="modal" id="m-product" style="display:none">
     <button class="btn-modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title">Add a product</div>
@@ -590,7 +200,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
     </div>
   </div>
 
-  <!-- STORE -->
+  
   <div class="modal" id="m-store" style="display:none">
     <button class="btn-modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title">Add a store</div>
@@ -604,7 +214,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
     </div>
   </div>
 
-  <!-- ENTRY -->
+  
   <div class="modal wide" id="m-entry" style="display:none">
     <button class="btn-modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title" id="modal-entry-title">Add price entry</div>
@@ -619,7 +229,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
       <div class="fg" style="margin-bottom:0"><label class="lbl">Listed / sale price (₹) <span class="lbl-note">— actual price shown</span></label><input type="number" id="e-base" placeholder="0" oninput="recalc()" min="0" step="1"></div>
     </div>
 
-    <!-- DISCOUNTS -->
+    
     <div class="inner-box">
       <div class="inner-label-row">
         <div class="inner-label" style="margin-bottom:0">Discounts <span class="badge-count" id="disc-count-badge" style="display:none">0</span></div>
@@ -630,7 +240,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
       </div>
       <div id="disc-mode-hint" style="font-size:.67rem;color:var(--ink3);margin:6px 0 10px;line-height:1.5"></div>
       <div id="disc-list"></div>
-      <!-- ADD DISC FORM -->
+      
       <div class="add-disc-form">
         <div class="add-disc-row">
           <div class="fg" style="margin-bottom:0"><label class="lbl" style="margin-bottom:4px">Label</label><input type="text" id="d-name" placeholder="e.g. HDFC Card, Sale…"></div>
@@ -649,7 +259,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
       </div>
     </div>
 
-    <!-- GST -->
+    
     <div class="inner-box">
       <div class="check-row" style="padding:0"><input type="checkbox" id="e-gst" onchange="toggleGST()"><label for="e-gst">GST Input Credit applicable — reverse-calculate GST off the price</label></div>
       <div id="gst-extra" style="display:none;margin-top:14px">
@@ -660,13 +270,13 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
       </div>
     </div>
 
-    <!-- OVERALL NOTE -->
+    
     <div class="fg" style="margin-bottom:12px">
       <label class="lbl">Overall note for this entry <span class="lbl-note">optional — e.g. "in-stock until June", "includes warranty"</span></label>
       <textarea id="e-note" placeholder="Any context about this store's pricing, offer validity, availability…"></textarea>
     </div>
 
-    <!-- LIVE PREVIEW -->
+    
     <div class="preview-box" id="preview-box" style="display:none">
       <div class="preview-eye">Live preview</div>
       <div id="preview-inner"></div>
@@ -682,791 +292,7 @@ kbd{font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;color:var(-
 
 <div class="toast" id="toast"></div>
 
-<script>
-/* ─── STATE ─────────────────────────────────── */
-let S = { products:[], stores:[], entries:[], theme:'light' };
-let M = { discounts:[], discType:'flat', discMode:'additive', editId:null };
-const STORE_KEY = 'pricelens_v5';
+<script src="assets/js/app.js"></script>
 
-function load(){ try{ const d=localStorage.getItem(STORE_KEY); if(d) S=Object.assign({},S,JSON.parse(d)); }catch(e){} }
-function save(){ try{ localStorage.setItem(STORE_KEY,JSON.stringify(S)); }catch(e){} }
-const uid  = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-const fmt  = n=>(isNaN(n)||n===null)?'0':Math.round(n).toLocaleString('en-IN');
-const fmtD = n=>(isNaN(n)||n===null)?'0.00':Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-const esc  = s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-/* ─── THEME ─────────────────────────────────── */
-function setTheme(t){ S.theme=t; applyTheme(); save(); }
-function toggleTheme(){ setTheme(S.theme==='dark'?'light':'dark'); }
-function applyTheme(){
-  document.documentElement.setAttribute('data-theme',S.theme);
-  const isDark=S.theme==='dark';
-  document.getElementById('theme-btn').textContent=isDark?'🌙':'🌤';
-  document.getElementById('theme-btn').title=isDark?'Switch to light (T)':'Switch to dark (T)';
-  const lb=document.getElementById('theme-light-btn'), db=document.getElementById('theme-dark-btn');
-  if(lb){ lb.classList.toggle('on',!isDark); db.classList.toggle('on',isDark); }
-}
-
-/* ─── NAV COUNTS ─────────────────────────────── */
-function updateNavCounts(){
-  const set=(id,n)=>{ const el=document.getElementById('nc-'+id); if(!el) return; el.textContent=n; el.classList.toggle('show',n>0); };
-  set('products',S.products.length); set('stores',S.stores.length); set('entries',S.entries.length);
-  // Bottom nav dots
-  const setDot=(id,n)=>{ const el=document.getElementById('bnd-'+id); if(!el) return; el.classList.toggle('show',n>0); };
-  setDot('products',S.products.length); setDot('stores',S.stores.length); setDot('entries',S.entries.length);
-}
-
-/* ─── TABS ──────────────────────────────────── */
-const TABS=['dashboard','products','stores','entries','settings'];
-function go(tab){
-  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('#main-nav button').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  const navBtn=document.querySelectorAll('#main-nav button')[TABS.indexOf(tab)];
-  if(navBtn) navBtn.classList.add('active');
-  const bnavBtn=document.getElementById('bnav-'+tab);
-  if(bnavBtn) bnavBtn.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(tab==='dashboard') renderDashboard();
-  if(tab==='products')  renderProducts();
-  if(tab==='stores')    renderStores();
-  if(tab==='entries')   renderEntries();
-  if(tab==='settings')  renderSettings();
-}
-
-/* ─── MODAL ─────────────────────────────────── */
-function openModal(type,editId=null){
-  M.editId=editId;
-  document.getElementById('overlay').style.display='flex';
-  ['product','store','entry'].forEach(t=>document.getElementById('m-'+t).style.display='none');
-  document.getElementById('m-'+type).style.display='block';
-  if(type==='entry') initEntryModal(editId);
-  setTimeout(()=>{ const inp=document.querySelector('#m-'+type+' input[type=text]'); if(inp) inp.focus(); },100);
-}
-function closeModal(){ document.getElementById('overlay').style.display='none'; }
-function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
-
-/* ─── PRODUCTS ──────────────────────────────── */
-function editProduct(id){
-  const p=S.products.find(x=>x.id===id); if(!p) return;
-  openModal('product');
-  document.getElementById('p-name').value=p.name;
-  document.getElementById('p-cat').value=p.cat;
-  document.getElementById('p-gst').value=p.gst;
-  document.getElementById('m-product').dataset.editId=id;
-  document.querySelector('#m-product .modal-title').textContent='Edit product';
-  document.querySelector('#m-product .btn-primary').textContent='Update product';
-}
-function addProduct(){
-  const name=document.getElementById('p-name').value.trim();
-  if(!name){ toast('Please enter a product name','err'); return; }
-  const editId=document.getElementById('m-product').dataset.editId||'';
-  if(editId){
-    const idx=S.products.findIndex(p=>p.id===editId);
-    if(idx>=0) S.products[idx]={...S.products[idx],name,cat:document.getElementById('p-cat').value,gst:+document.getElementById('p-gst').value};
-    delete document.getElementById('m-product').dataset.editId;
-    toast('Product updated');
-  } else {
-    S.products.push({id:uid(),name,cat:document.getElementById('p-cat').value,gst:+document.getElementById('p-gst').value});
-    toast('Product added');
-  }
-  save(); closeModal();
-  document.getElementById('p-name').value='';
-  document.querySelector('#m-product .modal-title').textContent='Add a product';
-  document.querySelector('#m-product .btn-primary').textContent='Save product';
-  updateNavCounts(); renderProducts(); renderDashboard();
-}
-function delProduct(id){
-  confirm2('Remove product?','This will also remove all price entries for this product. Cannot be undone.',()=>{
-    S.products=S.products.filter(p=>p.id!==id);
-    S.entries=S.entries.filter(e=>e.pid!==id);
-    save(); updateNavCounts(); renderProducts(); renderEntries(); renderDashboard(); toast('Product removed');
-  });
-}
-function renderProducts(){
-  const n=S.products.length;
-  document.getElementById('pc').textContent=n+' tracked';
-  const el=document.getElementById('products-list');
-  if(!n){ el.innerHTML=emptyState('📦','No products yet','Add laptops, tablets, phones or any device you want to track and compare across stores.',`<button class="btn btn-primary" onclick="openModal('product')">Add your first product</button>`); return; }
-  el.innerHTML=S.products.map(p=>{
-    const ec=S.entries.filter(e=>e.pid===p.id).length;
-    return `<div class="list-item">
-      <div style="min-width:0">
-        <div class="list-item-name">${esc(p.name)}</div>
-        <div class="tags"><span class="tag">${esc(p.cat)}</span><span class="tag tag-amber">GST ${p.gst}%</span><span class="tag-dim">${ec} price entr${ec===1?'y':'ies'}</span></div>
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn btn-ghost btn-sm" onclick="editProduct('${p.id}')">Edit</button>
-        <button class="btn btn-danger" onclick="delProduct('${p.id}')">Remove</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-/* ─── STORES ────────────────────────────────── */
-function editStore(id){
-  const s=S.stores.find(x=>x.id===id); if(!s) return;
-  openModal('store');
-  document.getElementById('s-name').value=s.name;
-  document.getElementById('s-type').value=s.type;
-  document.getElementById('m-store').dataset.editId=id;
-  document.querySelector('#m-store .modal-title').textContent='Edit store';
-  document.querySelector('#m-store .btn-primary').textContent='Update store';
-}
-function addStore(){
-  const name=document.getElementById('s-name').value.trim();
-  if(!name){ toast('Please enter a store name','err'); return; }
-  const editId=document.getElementById('m-store').dataset.editId||'';
-  if(editId){
-    const idx=S.stores.findIndex(s=>s.id===editId);
-    if(idx>=0) S.stores[idx]={...S.stores[idx],name,type:document.getElementById('s-type').value};
-    delete document.getElementById('m-store').dataset.editId;
-    toast('Store updated');
-  } else {
-    S.stores.push({id:uid(),name,type:document.getElementById('s-type').value});
-    toast('Store added');
-  }
-  save(); closeModal();
-  document.getElementById('s-name').value='';
-  document.querySelector('#m-store .modal-title').textContent='Add a store';
-  document.querySelector('#m-store .btn-primary').textContent='Save store';
-  updateNavCounts(); renderStores(); renderDashboard();
-}
-function delStore(id){
-  confirm2('Remove store?','This will also remove all price entries for this store. Cannot be undone.',()=>{
-    S.stores=S.stores.filter(s=>s.id!==id);
-    S.entries=S.entries.filter(e=>e.sid!==id);
-    save(); updateNavCounts(); renderStores(); renderEntries(); renderDashboard(); toast('Store removed');
-  });
-}
-function renderStores(){
-  const n=S.stores.length;
-  document.getElementById('sc').textContent=n+' tracked';
-  const el=document.getElementById('stores-list');
-  if(!n){ el.innerHTML=emptyState('🏪','No stores yet','Add Amazon India, Flipkart, Croma, Vijay Sales, Apple Store or any seller you want to compare.',`<button class="btn btn-primary" onclick="openModal('store')">Add your first store</button>`); return; }
-  el.innerHTML=S.stores.map(s=>{
-    const ec=S.entries.filter(e=>e.sid===s.id).length;
-    return `<div class="list-item">
-      <div>
-        <div class="list-item-name">${esc(s.name)}</div>
-        <div class="tags"><span class="tag">${esc(s.type)}</span><span class="tag-dim">${ec} price entr${ec===1?'y':'ies'}</span></div>
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn btn-ghost btn-sm" onclick="editStore('${s.id}')">Edit</button>
-        <button class="btn btn-danger" onclick="delStore('${s.id}')">Remove</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-/* ─── ENTRY MODAL ───────────────────────────── */
-function initEntryModal(editId){
-  M.discounts=[]; M.discType='flat'; M.discMode='additive';
-  const ps=document.getElementById('e-prod'), ss=document.getElementById('e-store');
-  ps.innerHTML='<option value="">Choose product…</option>'+S.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
-  ss.innerHTML='<option value="">Choose store…</option>'+S.stores.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
-  document.getElementById('e-mrp').value='';
-  document.getElementById('e-base').value='';
-  document.getElementById('e-note').value='';
-  document.getElementById('e-gst').checked=false;
-  document.getElementById('gst-extra').style.display='none';
-  if(editId){
-    const e=S.entries.find(x=>x.id===editId);
-    if(e){
-      document.getElementById('modal-entry-title').textContent='Edit price entry';
-      document.getElementById('save-entry-btn').textContent='Update entry';
-      ps.value=e.pid; ss.value=e.sid;
-      document.getElementById('e-mrp').value=e.mrp||'';
-      document.getElementById('e-base').value=e.base;
-      document.getElementById('e-note').value=e.note||'';
-      M.discounts=JSON.parse(JSON.stringify(e.discounts||[]));
-      M.discMode=e.discMode||'additive';
-      document.getElementById('e-gst').checked=e.gst;
-      document.getElementById('e-grate').value=e.grate||18;
-      document.getElementById('gst-extra').style.display=e.gst?'block':'none';
-    }
-  } else {
-    document.getElementById('modal-entry-title').textContent='Add price entry';
-    document.getElementById('save-entry-btn').textContent='Save entry';
-  }
-  document.getElementById('d-name').value='';
-  document.getElementById('d-val').value='';
-  document.getElementById('d-note').value='';
-  applyDiscType(); applyDiscMode(); renderDiscList();
-  document.getElementById('preview-box').style.display='none';
-  recalc();
-}
-
-/* ─── DISCOUNT STACK ────────────────────────── */
-function setDiscType(t){ M.discType=t; applyDiscType(); }
-function applyDiscType(){
-  document.querySelectorAll('#d-type-toggle button').forEach((b,i)=>b.classList.toggle('on',i===(M.discType==='flat'?0:1)));
-  document.getElementById('d-val-lbl').textContent=M.discType==='flat'?'Amount (₹)':'Percentage (%)';
-}
-function setDiscMode(m){ M.discMode=m; applyDiscMode(); recalc(); }
-function applyDiscMode(){
-  const isAdd=M.discMode==='additive';
-  document.getElementById('dm-add').classList.toggle('on',isAdd);
-  document.getElementById('dm-seq').classList.toggle('on',!isAdd);
-  const hint=document.getElementById('disc-mode-hint');
-  if(M.discounts.length<2){ hint.textContent=''; return; }
-  hint.textContent=isAdd
-    ?'Additive: all % discounts summed and applied together. 10% + 5% = 15% off.'
-    :'Sequential: each discount on the running price. 10% then 5% = 14.5% total (10% of ₹1,000=₹900, then 5% of ₹900=₹855).';
-}
-function moveDisc(id,dir){
-  const idx=M.discounts.findIndex(d=>d.id===id), to=idx+dir;
-  if(to<0||to>=M.discounts.length) return;
-  [M.discounts[idx],M.discounts[to]]=[M.discounts[to],M.discounts[idx]];
-  renderDiscList(); recalc();
-}
-function addDisc(){
-  const val=parseFloat(document.getElementById('d-val').value)||0;
-  if(val<=0){ toast('Enter a discount value','warn'); return; }
-  M.discounts.push({id:uid(),name:document.getElementById('d-name').value.trim()||(M.discType==='flat'?'Flat Discount':'% Discount'),type:M.discType,val,note:document.getElementById('d-note').value.trim()});
-  document.getElementById('d-name').value=''; document.getElementById('d-val').value=''; document.getElementById('d-note').value='';
-  renderDiscList(); applyDiscMode(); recalc();
-}
-function removeDisc(id){ M.discounts=M.discounts.filter(d=>d.id!==id); renderDiscList(); applyDiscMode(); recalc(); }
-function renderDiscList(){
-  const el=document.getElementById('disc-list');
-  const badge=document.getElementById('disc-count-badge');
-  if(!M.discounts.length){ el.innerHTML=''; badge.style.display='none'; return; }
-  badge.style.display='inline'; badge.textContent=M.discounts.length;
-  const n=M.discounts.length;
-  el.innerHTML=M.discounts.map((d,i)=>`
-    <div class="disc-item">
-      <div class="disc-item-main">
-        <div class="disc-reorder">
-          <button class="btn-reorder" onclick="moveDisc('${d.id}',-1)" ${i===0?'disabled':''}>▲</button>
-          <button class="btn-reorder" onclick="moveDisc('${d.id}',1)" ${i===n-1?'disabled':''}>▼</button>
-        </div>
-        <div class="disc-name">${esc(d.name)}</div>
-        <div class="disc-step">${M.discMode==='sequential'?`step ${i+1}`:(d.type==='flat'?'flat':'%')}</div>
-        <div class="disc-val">${d.type==='flat'?'−₹'+fmt(d.val):'−'+d.val+'%'}</div>
-        <button class="btn-disc-rm" onclick="removeDisc('${d.id}')" title="Remove">✕</button>
-      </div>
-      ${d.note?`<div class="disc-item-note">${esc(d.note)}</div>`:''}
-    </div>`).join('');
-}
-
-/* ─── GST ───────────────────────────────────── */
-function onProdSel(){
-  const p=S.products.find(p=>p.id===document.getElementById('e-prod').value);
-  if(p&&document.getElementById('e-gst').checked) document.getElementById('e-grate').value=p.gst;
-  recalc();
-}
-function toggleGST(){
-  const on=document.getElementById('e-gst').checked;
-  document.getElementById('gst-extra').style.display=on?'block':'none';
-  if(on){ const p=S.products.find(p=>p.id===document.getElementById('e-prod').value); if(p) document.getElementById('e-grate').value=p.gst; }
-  recalc();
-}
-
-/* ─── CALC ENGINE ───────────────────────────── */
-function calc(entry){
-  const base=entry.base||0, discs=entry.discounts||[], gst=entry.gst, grate=entry.grate||0;
-  const mode=entry.discMode||'additive';
-  const mrp=entry.mrp||0;
-  let price=base; const steps=[];
-
-  if(mode==='additive'){
-    let totalPct=0, totalFlat=0;
-    discs.forEach(d=>{ if(d.type==='pct') totalPct+=d.val||0; else totalFlat+=d.val||0; });
-    const afterPct=totalPct>0?Math.max(0,base*(1-totalPct/100)):base;
-    price=Math.max(0,afterPct-totalFlat);
-    if(totalPct>0) steps.push({name:`${totalPct}% combined`,type:'pct',val:totalPct,before:base,after:afterPct,amount:base-afterPct});
-    if(totalFlat>0) steps.push({name:`₹${fmt(totalFlat)} flat off`,type:'flat',val:totalFlat,before:afterPct,after:price,amount:Math.min(totalFlat,afterPct)});
-  } else {
-    for(const d of discs){
-      const before=price;
-      price=d.type==='flat'?Math.max(0,price-(d.val||0)):Math.max(0,price*(1-(d.val||0)/100));
-      steps.push({...d,before,after:price,amount:before-price});
-    }
-  }
-
-  const afterDiscs=price, totalDiscAmt=base-afterDiscs;
-  let exGST=afterDiscs, gstAmt=0;
-  if(gst&&grate>0){ exGST=afterDiscs/(1+grate/100); gstAmt=afterDiscs-exGST; }
-  const eff=gst?exGST:afterDiscs;
-  const savedVsBase=base-eff;
-  const savedVsMRP=mrp>0?mrp-eff:null;
-  const discSavingAmt=totalDiscAmt;
-  const gstSavingAmt=gstAmt;
-  return {steps,afterDiscs,gstAmt,exGST,eff,savedVsBase,savedVsMRP,discSavingAmt,gstSavingAmt,totalDiscAmt,mode};
-}
-
-/* ─── LIVE PREVIEW ──────────────────────────── */
-function recalc(){
-  const base=parseFloat(document.getElementById('e-base').value)||0;
-  const mrp=parseFloat(document.getElementById('e-mrp').value)||0;
-  const gstOn=document.getElementById('e-gst').checked;
-  const grate=parseFloat(document.getElementById('e-grate').value)||18;
-  if(!base){ document.getElementById('preview-box').style.display='none'; return; }
-  const r=calc({base,mrp,discounts:M.discounts,gst:gstOn,grate,discMode:M.discMode});
-  document.getElementById('preview-box').style.display='block';
-  let inner='<div class="preview-grid">';
-  if(mrp>0) inner+=`<div><div class="pv-l">MRP</div><div class="pv-v" style="text-decoration:line-through;color:var(--ink3)">₹${fmt(mrp)}</div></div>`;
-  inner+=`<div><div class="pv-l">Listed price</div><div class="pv-v">₹${fmt(base)}</div></div>`;
-  if(mrp>0&&mrp>base) inner+=`<div><div class="pv-l">Already off MRP</div><div class="pv-v c-amber">−₹${fmt(mrp-base)} (${(((mrp-base)/mrp)*100).toFixed(1)}%)</div></div>`;
-  if(r.steps.length){
-    r.steps.forEach((s,i)=>{ inner+=`<div><div class="pv-l">${esc(s.name)}${M.discMode==='sequential'?' (step '+(i+1)+')':''}</div><div class="pv-v c-ruby">−₹${fmt(s.amount)}</div></div>`; });
-    inner+=`<div><div class="pv-l">After discounts</div><div class="pv-v c-amber">₹${fmt(r.afterDiscs)}</div></div>`;
-  }
-  if(gstOn){
-    inner+=`<div><div class="pv-l">GST ${grate}% removed</div><div class="pv-v c-sky">−₹${fmt(r.gstAmt)}</div></div>`;
-    inner+=`<div><div class="pv-l">Price ex-GST</div><div class="pv-v c-emerald">₹${fmt(r.exGST)}</div></div>`;
-  }
-  inner+='<div class="pv-rule"></div>';
-  inner+=`<div style="grid-column:1/-1"><div class="pv-l">Effective price</div><div class="pv-v c-emerald" style="font-size:1.15rem;font-weight:500">₹${fmt(r.eff)}</div></div>`;
-  // Savings breakdown pills
-  if(r.discSavingAmt>0||r.gstSavingAmt>0||r.savedVsMRP){
-    inner+='<div style="grid-column:1/-1"><div class="savings-breakdown">';
-    if(r.discSavingAmt>0) inner+=`<span class="sav-pill sav-disc">Discounts: −₹${fmt(r.discSavingAmt)}</span>`;
-    if(r.gstSavingAmt>0) inner+=`<span class="sav-pill sav-gst">GST credit: −₹${fmt(r.gstSavingAmt)}</span>`;
-    if(r.savedVsBase>0) inner+=`<span class="sav-pill sav-total">Total vs listed: −₹${fmt(r.savedVsBase)} (${((r.savedVsBase/base)*100).toFixed(1)}%)</span>`;
-    if(r.savedVsMRP) inner+=`<span class="sav-pill" style="background:var(--violet-bg);color:var(--violet);border:1px solid var(--violet-bdr)">vs MRP: −₹${fmt(r.savedVsMRP)} (${((r.savedVsMRP/mrp)*100).toFixed(1)}%)</span>`;
-    inner+='</div></div>';
-  }
-  inner+='</div>';
-  document.getElementById('preview-inner').innerHTML=inner;
-  if(gstOn) document.getElementById('gst-hint').textContent=`₹${fmt(r.afterDiscs)} ÷ (1 + ${grate}/100) = ₹${fmtD(r.exGST)}  ·  GST portion: ₹${fmtD(r.gstAmt)}`;
-}
-
-/* ─── SAVE ENTRY ────────────────────────────── */
-function saveEntry(){
-  const pid=document.getElementById('e-prod').value, sid=document.getElementById('e-store').value;
-  const base=parseFloat(document.getElementById('e-base').value);
-  const mrp=parseFloat(document.getElementById('e-mrp').value)||0;
-  if(!pid){ toast('Please select a product','err'); return; }
-  if(!sid){ toast('Please select a store','err'); return; }
-  if(!base||base<=0){ toast('Please enter a valid listed price','err'); return; }
-  const entry={pid,sid,mrp,base,discounts:JSON.parse(JSON.stringify(M.discounts)),discMode:M.discMode,
-    note:document.getElementById('e-note').value.trim(),
-    gst:document.getElementById('e-gst').checked,grate:parseFloat(document.getElementById('e-grate').value)||18,
-    added:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})};
-  if(M.editId){
-    const idx=S.entries.findIndex(e=>e.id===M.editId);
-    if(idx>=0) S.entries[idx]={...entry,id:M.editId};
-    toast('Entry updated');
-  } else {
-    const ex=S.entries.findIndex(e=>e.pid===pid&&e.sid===sid);
-    if(ex>=0){
-      confirm2('Replace existing entry?','An entry for this product + store already exists. Replace it?',()=>{
-        S.entries[ex]={...entry,id:S.entries[ex].id};
-        save(); updateNavCounts(); closeModal(); renderEntries(); renderDashboard(); toast('Entry replaced');
-      },'Replace');
-      return;
-    } else { S.entries.push({...entry,id:uid()}); }
-    toast('Price entry saved');
-  }
-  save(); updateNavCounts(); closeModal(); renderEntries(); renderDashboard();
-}
-function delEntry(id){
-  confirm2('Remove this entry?','This price entry will be permanently deleted.',()=>{
-    S.entries=S.entries.filter(e=>e.id!==id);
-    save(); updateNavCounts(); renderEntries(); renderDashboard(); toast('Entry removed');
-  });
-}
-
-/* ─── RENDER ENTRIES ────────────────────────── */
-function renderEntries(){
-  const n=S.entries.length;
-  document.getElementById('ec').textContent=n+' entr'+(n===1?'y':'ies');
-  const el=document.getElementById('entries-list');
-  if(!n){ el.innerHTML=emptyState('🏷','No price entries yet','Add products and stores first, then record prices from each seller.',
-    `<button class="btn btn-ghost btn-sm" onclick="go('products')">Add product</button>
-     <button class="btn btn-ghost btn-sm" onclick="go('stores')">Add store</button>
-     <button class="btn btn-primary" onclick="openModal('entry')">Add price entry</button>`); return; }
-  const q=(document.getElementById('entry-search')?.value||'').toLowerCase().trim();
-  const sortBy=document.getElementById('entry-sort')?.value||'newest';
-  let filtered=S.entries.filter(entry=>{
-    if(!q) return true;
-    const prod=S.products.find(p=>p.id===entry.pid), store=S.stores.find(s=>s.id===entry.sid);
-    return (prod?.name||'').toLowerCase().includes(q)||(store?.name||'').toLowerCase().includes(q)||(entry.note||'').toLowerCase().includes(q);
-  });
-  // Enrich with calc
-  const enriched=filtered.map(e=>{
-    const prod=S.products.find(p=>p.id===e.pid), store=S.stores.find(s=>s.id===e.sid);
-    if(!prod||!store) return null;
-    return {...e,prod,store,r:calc(e)};
-  }).filter(Boolean);
-  // Sort
-  if(sortBy==='cheapest') enriched.sort((a,b)=>a.r.eff-b.r.eff);
-  else if(sortBy==='savings') enriched.sort((a,b)=>b.r.savedVsBase-a.r.savedVsBase);
-  else if(sortBy==='product') enriched.sort((a,b)=>a.prod.name.localeCompare(b.prod.name));
-  // newest is default (insertion order)
-  if(!enriched.length){ el.innerHTML=emptyState('🔍','No matches','Try a different search term.',`<button class="btn btn-ghost btn-sm" onclick="document.getElementById('entry-search').value='';renderEntries()">Clear search</button>`); return; }
-  el.innerHTML=enriched.map(({prod,store,r,...entry})=>{
-    const discNotes=(entry.discounts||[]).filter(d=>d.note).map(d=>`<span style="font-weight:600">${esc(d.name)}:</span> ${esc(d.note)}`);
-    return `<div class="ecard">
-      <div class="ecard-hdr">
-        <div style="min-width:0">
-          <div class="ecard-name">${esc(prod.name)}</div>
-          <div class="ecard-tags">
-            <span class="tag">${esc(store.name)}</span>
-            <span class="tag">${esc(store.type)}</span>
-            <span class="tag">${esc(prod.cat)}</span>
-            ${entry.gst?`<span class="tag tag-sky">GST ${entry.grate}% credit</span>`:''}
-            ${(entry.discounts||[]).length?`<span class="tag tag-amber">${entry.discounts.length} discount${entry.discounts.length>1?'s':''} · ${entry.discMode==='sequential'?'sequential':'additive'}</span>`:''}
-            <span class="tag-dim">${entry.added}</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0">
-          <button class="btn btn-ghost btn-sm" onclick="openModal('entry','${entry.id}')">Edit</button>
-          <button class="btn btn-danger" onclick="delEntry('${entry.id}')">Remove</button>
-        </div>
-      </div>
-      <div class="price-row">
-        ${entry.mrp?`<div><div class="pr-lbl">MRP</div><div class="pr-val" style="text-decoration:line-through;color:var(--ink3)">₹${fmt(entry.mrp)}</div></div>`:''}
-        <div><div class="pr-lbl">Listed</div><div class="pr-val">₹${fmt(entry.base)}</div></div>
-        ${(entry.discounts||[]).length?`<div><div class="pr-lbl">Discounts (${entry.discounts.length})</div><div class="pr-val c-ruby">−₹${fmt(r.totalDiscAmt)}</div><div class="pr-sub">${(entry.discounts||[]).map(d=>esc(d.name)).join(' → ')}</div></div>`:''}
-        <div><div class="pr-lbl">After discounts</div><div class="pr-val c-amber">₹${fmt(r.afterDiscs)}</div></div>
-        ${entry.gst?`<div><div class="pr-lbl">GST ${entry.grate}% off</div><div class="pr-val c-sky">−₹${fmt(r.gstAmt)}</div></div>`:''}
-        <div><div class="pr-lbl">Effective price</div><div class="pr-val c-emerald" style="font-size:.98rem;font-weight:600">₹${fmt(r.eff)}</div></div>
-        <div><div class="pr-lbl">Saved vs listed</div><div class="pr-val c-emerald">₹${fmt(r.savedVsBase)}<div class="pr-sub">${r.savedVsBase>0?((r.savedVsBase/entry.base)*100).toFixed(1)+'% off':'-'}</div></div></div>
-        ${entry.mrp&&r.savedVsMRP?`<div><div class="pr-lbl">Saved vs MRP</div><div class="pr-val" style="color:var(--violet)">₹${fmt(r.savedVsMRP)}<div class="pr-sub">${((r.savedVsMRP/entry.mrp)*100).toFixed(1)}% off MRP</div></div></div>`:''}
-      </div>
-      <!-- Savings breakdown pills -->
-      ${r.discSavingAmt>0||r.gstSavingAmt>0?`
-      <div class="savings-breakdown" style="margin-top:12px">
-        ${r.discSavingAmt>0?`<span class="sav-pill sav-disc">Discounts saved: ₹${fmt(r.discSavingAmt)}</span>`:''}
-        ${r.gstSavingAmt>0?`<span class="sav-pill sav-gst">GST credit: ₹${fmt(r.gstSavingAmt)}</span>`:''}
-        ${r.discSavingAmt>0&&r.gstSavingAmt>0?`<span class="sav-pill sav-total">Total: ₹${fmt(r.savedVsBase)}</span>`:''}
-      </div>`:''}
-      <!-- Discount notes -->
-      ${discNotes.length?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-bottom:6px">Discount notes</div>
-        ${discNotes.map(n=>`<div style="font-size:.76rem;color:var(--ink2);margin-bottom:4px;line-height:1.5">• ${n}</div>`).join('')}
-      </div>`:''}
-      <!-- Overall note -->
-      ${entry.note?`<div class="entry-note-display">${esc(entry.note)}</div>`:''}
-    </div>`;
-  }).join('');
-}
-
-/* ─── RENDER DASHBOARD ──────────────────────── */
-const _collapsed=new Set();
-function toggleCollapse(pid){ _collapsed.has(pid)?_collapsed.delete(pid):_collapsed.add(pid); renderDashboard(); }
-
-function renderDashboard(){
-  const el=document.getElementById('dashboard-content');
-  if(!S.entries.length){
-    el.innerHTML=emptyState('🔍','Nothing to compare yet',
-      'Start by adding a product, then add stores you want to compare, then record prices.',
-      `<button class="btn btn-ghost btn-sm" onclick="go('products')">Add a product</button>
-       <button class="btn btn-ghost btn-sm" onclick="go('stores')">Add a store</button>
-       <button class="btn btn-primary" onclick="openModal('entry')">Add price entry</button>`,'padding:72px 24px');
-    return;
-  }
-  const rich=S.entries.map(e=>{
-    const prod=S.products.find(p=>p.id===e.pid), store=S.stores.find(s=>s.id===e.sid);
-    if(!prod||!store) return null;
-    return {...e,prod,store,r:calc(e)};
-  }).filter(Boolean);
-  if(!rich.length){ el.innerHTML=emptyState('⚠️','Data inconsistency','Some entries reference deleted products or stores. Add new entries to proceed.',''); return; }
-
-  const bestAll=rich.reduce((a,b)=>a.r.eff<b.r.eff?a:b);
-  const maxSaving=rich.reduce((a,b)=>a.r.savedVsBase>b.r.savedVsBase?a:b);
-  const avgSav=rich.reduce((s,e)=>s+e.r.savedVsBase,0)/rich.length;
-  const gstCount=rich.filter(e=>e.gst).length;
-  const uniqP=[...new Set(rich.map(e=>e.pid))].length;
-  const uniqS=[...new Set(rich.map(e=>e.sid))].length;
-
-  let html=`<div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">Products tracked</div>
-      <div class="stat-num">${uniqP}</div>
-      <div class="stat-sub">${rich.length} entries across <strong>${uniqS}</strong> store${uniqS!==1?'s':''}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Best deal found</div>
-      <div class="stat-num" style="font-size:1.35rem;cursor:pointer" onclick="copyPrice('₹${fmt(bestAll.r.eff)}','best price')" title="Click to copy">₹${fmt(bestAll.r.eff)} <span style="font-size:.7rem;color:var(--ink3);font-family:'DM Sans',sans-serif">⎘</span></div>
-      <div class="stat-sub">${esc(bestAll.prod.name.split('(')[0].trim().slice(0,36))} @ <strong>${esc(bestAll.store.name)}</strong>${bestAll.gst?' · ex-GST':''}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Maximum savings</div>
-      <div class="stat-num" style="color:var(--emerald)">₹${fmt(maxSaving.r.savedVsBase)}</div>
-      <div class="stat-sub">${((maxSaving.r.savedVsBase/maxSaving.base)*100).toFixed(1)}% off listed · <strong>${esc(maxSaving.store.name)}</strong></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">GST credit entries</div>
-      <div class="stat-num" style="color:var(--sky)">${gstCount}</div>
-      <div class="stat-sub">of ${rich.length} total · avg saving ₹${fmt(avgSav)} per entry</div>
-    </div>
-  </div>`;
-
-  const byProd={};
-  rich.forEach(e=>{ if(!byProd[e.pid]) byProd[e.pid]=[]; byProd[e.pid].push(e); });
-  html+=`<div class="sec-label">Product-wise comparison</div>`;
-
-  Object.keys(byProd).forEach(pid=>{
-    const entries=byProd[pid], prod=entries[0].prod;
-    const sorted=[...entries].sort((a,b)=>a.r.eff-b.r.eff);
-    const best=sorted[0], worst=sorted[sorted.length-1];
-    const spread=worst.r.eff-best.r.eff;
-    const gstRows=sorted.filter(e=>e.gst);
-    const bestGST=gstRows.length?gstRows.reduce((a,b)=>a.r.eff<b.r.eff?a:b):null;
-    const noGSTRows=sorted.filter(e=>!e.gst);
-    const bestNoGST=noGSTRows.length?noGSTRows.reduce((a,b)=>a.r.eff<b.r.eff?a:b):null;
-    const isCollapsed=_collapsed.has(pid);
-
-    html+=`<div class="prod-block${isCollapsed?' collapsed':''}">
-      <div class="prod-block-hdr" onclick="toggleCollapse('${pid}')">
-        <span class="cat-chip">${esc(prod.cat)}</span>
-        <div class="prod-block-name">${esc(prod.name)}</div>
-        <span class="entry-count">${entries.length} store${entries.length!==1?'s':''}</span>
-        <span class="collapse-toggle">▾</span>
-      </div>
-      <div class="prod-block-body">`;
-
-    if(entries.length>1){
-      html+=`<div class="insight-row">
-        <div class="ic ic-best">
-          <div class="ic-eye">Best deal overall</div>
-          <div class="ic-store">${esc(best.store.name)}</div>
-          <div class="ic-price">₹${fmt(best.r.eff)}</div>
-          <div class="ic-note">${best.gst?`ex-GST (${best.grate}%)`:'as discounted'}</div>
-        </div>
-        ${bestGST&&bestGST.id!==best.id?`<div class="ic ic-gst">
-          <div class="ic-eye">Best with GST credit</div>
-          <div class="ic-store">${esc(bestGST.store.name)}</div>
-          <div class="ic-price">₹${fmt(bestGST.r.eff)}</div>
-          <div class="ic-note">ex-GST @ ${bestGST.grate}%</div>
-        </div>`:''}
-        ${bestNoGST&&bestNoGST.id!==best.id?`<div class="ic ic-teal">
-          <div class="ic-eye">Best without GST</div>
-          <div class="ic-store">${esc(bestNoGST.store.name)}</div>
-          <div class="ic-price">₹${fmt(bestNoGST.r.eff)}</div>
-          <div class="ic-note">no GST credit</div>
-        </div>`:''}
-        <div class="ic">
-          <div class="ic-eye">Price spread</div>
-          <div class="ic-store" style="font-size:.78rem;color:var(--ink2)">Cheapest vs costliest</div>
-          <div class="ic-price c-ruby">₹${fmt(spread)}</div>
-          <div class="ic-note">difference across stores</div>
-        </div>
-        ${best.r.savedVsBase>0?`<div class="ic">
-          <div class="ic-eye">Max savings vs listed</div>
-          <div class="ic-store" style="font-size:.78rem;color:var(--ink2)">${esc(best.store.name)}</div>
-          <div class="ic-price c-emerald">₹${fmt(best.r.savedVsBase)}</div>
-          <div class="ic-note">${((best.r.savedVsBase/best.base)*100).toFixed(1)}% off listed price</div>
-        </div>`:''}
-      </div>`;
-    }
-
-    html+=`<div class="tbl-card"><div class="tbl-wrap"><table class="ctbl">
-      <thead><tr>
-        <th>Store</th><th>Type</th><th>MRP</th><th>Listed ₹</th>
-        <th>Discounts</th><th>After disc.</th><th>GST benefit</th>
-        <th>Effective price</th><th>Disc. saving</th><th>GST saving</th><th>Total saved</th><th>vs Best</th>
-      </tr></thead><tbody>
-      ${sorted.map((e,i)=>{
-        const isBest=i===0, isGSTW=bestGST&&e.id===bestGST.id&&!isBest, vsBest=e.r.eff-best.r.eff;
-        const discSummary=(e.discounts||[]).length
-          ?(e.discounts||[]).map(d=>`<span title="${esc(d.note||d.name)}" style="white-space:nowrap">${d.type==='flat'?'−₹'+fmt(d.val):'−'+d.val+'%'}</span>`).join('<span style="color:var(--ink3)"> → </span>')
-          :'<span class="c-dim">—</span>';
-        // Notes for this entry's discounts
-        const discNotesTooltip=(e.discounts||[]).filter(d=>d.note).map(d=>d.name+': '+d.note).join(' | ');
-        return `<tr class="${isBest?'row-winner':isGSTW?'row-gst':''}">
-          <td>
-            <div style="font-weight:600;color:var(--ink)">${esc(e.store.name)}</div>
-            <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">
-              ${isBest?'<span class="badge-win">Best deal</span>':''}
-              ${isGSTW?'<span class="badge-gst">GST win</span>':''}
-            </div>
-            ${e.note?`<div style="font-size:.64rem;color:var(--ink3);margin-top:4px;font-style:italic;line-height:1.4" title="${esc(e.note)}">📝 ${esc(e.note.slice(0,50))}${e.note.length>50?'…':''}</div>`:''}
-          </td>
-          <td><span class="tag" style="font-size:.62rem">${esc(e.store.type)}</span></td>
-          <td>${e.mrp?`<span style="text-decoration:line-through;color:var(--ink3)">₹${fmt(e.mrp)}</span>`:'<span class="c-dim">—</span>'}</td>
-          <td>₹${fmt(e.base)}</td>
-          <td>
-            <div style="font-size:.72rem;line-height:1.8;color:var(--ruby)" ${discNotesTooltip?`title="${esc(discNotesTooltip)}"`:''}>${discSummary}</div>
-            ${(e.discounts||[]).length>1?`<div style="font-size:.61rem;color:var(--ink3);margin-top:2px">${e.discMode==='sequential'?'sequential':'additive'}</div>`:''}
-          </td>
-          <td class="c-amber">₹${fmt(e.r.afterDiscs)}</td>
-          <td>
-            ${e.gst?`<span class="tag tag-sky" style="font-size:.62rem">${e.grate}%</span><div class="c-sky" style="font-size:.7rem;margin-top:3px">−₹${fmt(e.r.gstAmt)}</div>`:'<span class="c-dim">—</span>'}
-          </td>
-          <td>
-            <div class="${isBest?'c-emerald':''}" style="${isBest?'font-size:.92rem;font-weight:600':''}">₹${fmt(e.r.eff)}${isBest?` <span onclick="copyPrice('₹${fmt(e.r.eff)}','${esc(e.store.name)} price')" title="Copy price" style="cursor:pointer;font-size:.65rem;color:var(--ink3);font-family:'DM Sans',sans-serif">⎘</span>`:''}</div>
-            ${e.gst?'<div style="font-size:.61rem;color:var(--ink3);margin-top:2px">ex-GST</div>':''}
-            ${e.mrp&&e.r.savedVsMRP?`<div style="font-size:.61rem;color:var(--violet);margin-top:2px">−${((e.r.savedVsMRP/e.mrp)*100).toFixed(1)}% vs MRP</div>`:''}
-          </td>
-          <td>
-            ${e.r.discSavingAmt>0?`<div class="c-amber">₹${fmt(e.r.discSavingAmt)}</div>`:'<span class="c-dim">—</span>'}
-          </td>
-          <td>
-            ${e.r.gstSavingAmt>0?`<div class="c-sky">₹${fmt(e.r.gstSavingAmt)}</div>`:'<span class="c-dim">—</span>'}
-          </td>
-          <td>
-            <div class="c-emerald">₹${fmt(e.r.savedVsBase)}</div>
-            <div style="font-size:.62rem;color:var(--ink3);margin-top:2px">${e.r.savedVsBase>0?((e.r.savedVsBase/e.base)*100).toFixed(1)+'% off listed':'-'}</div>
-          </td>
-          <td>
-            ${isBest?'<span style="color:var(--emerald);font-weight:600;font-size:.76rem;font-family:\'DM Sans\',sans-serif">Cheapest</span>'
-              :`<div class="c-ruby">+₹${fmt(vsBest)}</div><div style="font-size:.61rem;color:var(--ink3);margin-top:2px">costlier</div>`}
-          </td>
-        </tr>`;
-      }).join('')}
-      </tbody></table></div></div>
-    </div></div>`;
-  });
-
-  // Store performance
-  const storeIDs=[...new Set(rich.map(e=>e.sid))];
-  if(storeIDs.length>1){
-    html+=`<div class="divider"></div><div class="sec-label">Store performance summary</div>
-    <div class="store-perf-card">
-      <div class="store-perf-hdr">
-        <div class="store-perf-title">Best deals per store — across all products</div>
-        <span style="font-size:.72rem;color:var(--ink3)">${storeIDs.length} stores</span>
-      </div>
-      <div class="tbl-wrap"><table class="ctbl"><thead><tr>
-        <th>Store</th><th>Type</th><th>Products</th>
-        <th>Avg effective price</th><th>Best price offered</th>
-        <th>Avg saving %</th><th>GST credit?</th><th>Discounts used</th>
-      </tr></thead><tbody>
-      ${storeIDs.map(sid=>{
-        const store=S.stores.find(s=>s.id===sid); if(!store) return '';
-        const ses=rich.filter(e=>e.sid===sid);
-        const avgEff=ses.reduce((s,e)=>s+e.r.eff,0)/ses.length;
-        const bestE=ses.reduce((a,b)=>a.r.eff<b.r.eff?a:b);
-        const avgSavPct=ses.reduce((s,e)=>s+((e.r.savedVsBase/e.base)*100),0)/ses.length;
-        const hasGST=ses.some(e=>e.gst);
-        const totalD=ses.reduce((s,e)=>s+((e.discounts||[]).length),0);
-        return `<tr>
-          <td style="font-weight:600;color:var(--ink)">${esc(store.name)}</td>
-          <td><span class="tag" style="font-size:.62rem">${esc(store.type)}</span></td>
-          <td>${ses.length}</td>
-          <td class="c-amber">₹${fmt(avgEff)}</td>
-          <td><div class="c-emerald">₹${fmt(bestE.r.eff)}</div><div style="font-size:.62rem;color:var(--ink3);margin-top:2px">${esc(bestE.prod.name.split('(')[0].slice(0,26).trim())}</div></td>
-          <td class="c-emerald">${avgSavPct.toFixed(1)}%</td>
-          <td>${hasGST?`<span class="tag tag-sky" style="font-size:.62rem">Yes</span>`:'<span class="c-dim">—</span>'}</td>
-          <td>${totalD}</td>
-        </tr>`;
-      }).join('')}
-      </tbody></table></div>
-    </div>`;
-  }
-  el.innerHTML=html;
-}
-
-/* ─── SETTINGS ──────────────────────────────── */
-function renderSettings(){
-  document.getElementById('settings-summary').textContent=
-    `${S.products.length} products · ${S.stores.length} stores · ${S.entries.length} price entries`;
-  const lb=document.getElementById('theme-light-btn'), db=document.getElementById('theme-dark-btn');
-  if(lb){ lb.classList.toggle('on',S.theme!=='dark'); db.classList.toggle('on',S.theme==='dark'); }
-}
-function clearAllData(){
-  confirm2('Clear all data?','This will permanently delete all products, stores, and price entries. This cannot be undone.',()=>{
-    S={products:[],stores:[],entries:[],theme:S.theme};
-    save(); updateNavCounts(); renderSettings(); renderDashboard();
-    toast('All data cleared');
-  },'Clear everything');
-}
-
-/* ─── EXPORT CSV ────────────────────────────── */
-function exportCSV(){
-  if(!S.entries.length){ toast('No entries to export','warn'); return; }
-  const rows=[['Product','Category','Store','Store Type','MRP','Listed Price','Discount Mode','Discounts','Total Discount Amt','After Discounts','GST Rate','GST Saving','Effective Price','Saved vs Listed','Saved vs MRP','Overall Note','Date Added']];
-  S.entries.forEach(e=>{
-    const prod=S.products.find(p=>p.id===e.pid), store=S.stores.find(s=>s.id===e.sid);
-    if(!prod||!store) return;
-    const r=calc(e);
-    const discStr=(e.discounts||[]).map(d=>`${d.name}:${d.type==='flat'?'₹'+d.val:d.val+'%'}${d.note?' ('+d.note+')':''}`).join(' | ');
-    rows.push([
-      prod.name, prod.cat, store.name, store.type,
-      e.mrp||'', e.base, e.discMode||'additive', discStr,
-      Math.round(r.totalDiscAmt), Math.round(r.afterDiscs),
-      e.gst?e.grate+'%':'', e.gst?Math.round(r.gstAmt):'',
-      Math.round(r.eff), Math.round(r.savedVsBase),
-      r.savedVsMRP?Math.round(r.savedVsMRP):'',
-      e.note||'', e.added
-    ]);
-  });
-  const csv=rows.map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='pricelens_export.csv'; a.click();
-  URL.revokeObjectURL(url);
-  toast('CSV downloaded');
-}
-
-/* ─── COPY ──────────────────────────────────── */
-function copyPrice(txt,label){
-  navigator.clipboard.writeText(txt).then(()=>toast('Copied: '+label)).catch(()=>toast('Copy failed','err'));
-}
-
-/* ─── CONFIRM ───────────────────────────────── */
-let _confirmCb=null;
-function confirm2(title,body,onOk,okLabel='Remove'){
-  document.getElementById('confirm-title').textContent=title;
-  document.getElementById('confirm-body').textContent=body;
-  const okBtn=document.getElementById('confirm-ok');
-  okBtn.textContent=okLabel; okBtn.style.background=okLabel==='Replace'?'var(--amber)':okLabel==='Clear everything'?'var(--ruby)':'var(--ruby)';
-  _confirmCb=onOk;
-  document.getElementById('confirm-overlay').style.display='flex';
-}
-function closeConfirm(){ document.getElementById('confirm-overlay').style.display='none'; _confirmCb=null; }
-
-/* ─── HELPERS ───────────────────────────────── */
-function toast(msg,type='ok'){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.className='toast'+(type==='err'?' err':type==='warn'?' warn':'');
-  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2800);
-}
-function emptyState(icon,title,body,actions,style=''){
-  return `<div class="empty" style="${style}"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-body">${body}</div><div class="empty-actions">${actions}</div></div>`;
-}
-
-/* ─── SEED DATA ─────────────────────────────── */
-function seedIfEmpty(){
-  if(S.products.length||S.stores.length) return;
-  S.products=[
-    {id:'p1',name:'Dell Inspiron 15 3520 — i5-12th / 8GB / 512GB SSD',cat:'Laptop',gst:18},
-    {id:'p2',name:'MacBook Air M2 — 8GB / 256GB (Midnight)',cat:'Laptop',gst:18},
-  ];
-  S.stores=[
-    {id:'s1',name:'Amazon India',type:'Online'},
-    {id:'s2',name:'Flipkart',type:'Online'},
-    {id:'s3',name:'Croma',type:'Retail / Offline'},
-    {id:'s4',name:'Apple India Official',type:'Brand Store'},
-  ];
-  S.entries=[
-    {id:'e1',pid:'p1',sid:'s1',mrp:62990,base:55990,discounts:[{id:'d1',name:'Axis Bank Card',type:'flat',val:2000,note:'Valid on 3+ month tenure cards only'}],discMode:'additive',gst:false,grate:18,note:'Usually ships in 2 days. Offer valid through June.',added:'28 May 2025'},
-    {id:'e2',pid:'p1',sid:'s2',mrp:62990,base:55990,discounts:[{id:'d2',name:'Flipkart Big Billion Days',type:'pct',val:5,note:'Event discount, check dates'},{id:'d3',name:'Super Coin Redemption',type:'flat',val:500,note:'Need 500 SuperCoins in wallet'}],discMode:'additive',gst:false,grate:18,note:'',added:'28 May 2025'},
-    {id:'e3',pid:'p1',sid:'s3',mrp:62990,base:57490,discounts:[{id:'d4',name:'Staff Discount',type:'flat',val:1500,note:'Ask at billing counter'}],discMode:'additive',gst:true,grate:18,note:'Physical store — can inspect before buying.',added:'28 May 2025'},
-    {id:'e4',pid:'p2',sid:'s4',mrp:119900,base:114900,discounts:[],discMode:'additive',gst:true,grate:18,note:'AppleCare+ available at ₹14,900 extra.',added:'28 May 2025'},
-    {id:'e5',pid:'p2',sid:'s1',mrp:119900,base:111900,discounts:[{id:'d5',name:'HDFC Card Offer',type:'flat',val:5000,note:'HDFC Regalia/Diners only'}],discMode:'additive',gst:false,grate:18,note:'',added:'28 May 2025'},
-    {id:'e6',pid:'p2',sid:'s2',mrp:119900,base:112900,discounts:[{id:'d6',name:'No-Cost EMI Benefit',type:'pct',val:3,note:'Effective saving on 6-month EMI'},{id:'d7',name:'Flipkart SmartBuy Cashback',type:'flat',val:700,note:'Credited within 24hrs'}],discMode:'additive',gst:false,grate:18,note:'',added:'28 May 2025'},
-  ];
-  save();
-}
-
-/* ─── KEYBOARD SHORTCUTS ────────────────────── */
-document.addEventListener('keydown',e=>{
-  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT') return;
-  const k=e.key.toLowerCase();
-  if(k==='escape'){ closeModal(); closeConfirm(); return; }
-  if(k==='n') openModal('entry');
-  if(k==='p') openModal('product');
-  if(k==='s'&&!e.ctrlKey&&!e.metaKey) openModal('store');
-  if(k==='t') toggleTheme();
-  if(k==='1') go('dashboard');
-  if(k==='2') go('products');
-  if(k==='3') go('stores');
-  if(k==='4') go('entries');
-});
-
-/* ─── INIT ──────────────────────────────────── */
-load(); applyTheme(); seedIfEmpty(); updateNavCounts();
-renderDashboard(); renderProducts(); renderStores(); renderEntries();
-document.getElementById('confirm-cancel').onclick=closeConfirm;
-document.getElementById('confirm-ok').onclick=()=>{ const cb=_confirmCb; closeConfirm(); if(cb) cb(); };
-document.getElementById('confirm-overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('confirm-overlay')) closeConfirm(); });
-</script>
 </body>
 </html>
